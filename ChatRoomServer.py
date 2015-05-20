@@ -124,8 +124,6 @@ class ChatRoomServer :
 						
 					elif D["type"] == "broadcast" :
 						for u in list(self.user.keys()) :
-							print(u)
-							print((u, D["message"]))
 							self.Q.put((u, "type=broadcast&message=%s" % D["message"]))
 							
 					elif D["type"] == "logout" :
