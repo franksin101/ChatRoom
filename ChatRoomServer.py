@@ -13,6 +13,8 @@ from ChatRoomPacket import *
 Account = {
 		"mary" : "mary",
 		"bob" : "bob"
+		"apple" : "apple"
+		"123" : "123"
 	}
 		
 class ChatRoomServer :
@@ -178,9 +180,13 @@ class ChatRoomServer :
 		mThread = Thread(target = self.monitor)
 		cThread = Thread(target = self.check)
 		jThread = Thread(target = self.join)
+		
 		mThread.start()
 		cThread.start()
 		jThread.start()
+		
+		print("Server Start OK")
+		
 		mThread.join()
 		cThread.join()
 		jThread.join()

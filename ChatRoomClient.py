@@ -19,7 +19,7 @@ class ChatRoomClient :
 		self.cond = Condition()
 		self.mod = bool(0)
 		self.exe = bool(1)
-		self.peer = "none"
+		self.peer = ""
 		self.hint = "Command is -->"
 		self.socket = socket(AF_INET, SOCK_STREAM)
 		self.socket.connect((self.ip, self.port))
@@ -117,7 +117,7 @@ class ChatRoomClient :
 					print(self.hint)
 				
 				elif D["type"] == "broadcast" :
-					print("broadcast message : %s", D["message"])
+					print("broadcast message : %s" % D["message"])
 					print(self.hint)
 					
 				elif D["type"] == "logout" :
@@ -132,6 +132,8 @@ class ChatRoomClient :
 		
 		rThread.start()
 		cThread.start()
+		
+		print("Client Start OK")
 		
 		cThread.join()
 		rThread.join()
