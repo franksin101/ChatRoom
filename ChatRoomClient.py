@@ -106,19 +106,16 @@ class ChatRoomClient :
 					for u in list(D.keys()) :
 						if not u == "type" :
 							print(u, " => ", D[u])
-					print(self.hint)
+					
 							
 				elif D["type"] == "talk" :
-					print("from %s say : %s" % (D["from"], D["message"]))
-					print(self.hint)
+					print("\nfrom %s say : %s" % (D["from"], D["message"]))
 					
 				elif D["type"] == "send" :
-					print("from %s say : %s" % (D["from"], D["message"]))
-					print(self.hint)
+					print("\nfrom %s say : %s" % (D["from"], D["message"]))
 				
 				elif D["type"] == "broadcast" :
-					print("broadcast message : %s" % D["message"])
-					print(self.hint)
+					print("\nbroadcast message : %s" % D["message"])
 					
 				elif D["type"] == "logout" :
 					print('logout')

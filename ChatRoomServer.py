@@ -12,8 +12,8 @@ from ChatRoomPacket import *
 
 Account = {
 		"mary" : "mary",
-		"bob" : "bob"
-		"apple" : "apple"
+		"bob" : "bob",
+		"apple" : "apple",
 		"123" : "123"
 	}
 		
