@@ -8,8 +8,6 @@ import struct
 # 請先安裝colorama => pip install -U colorama
 
 __keyBase__ = b''
-__chess__x__ = 1
-__chess__y__ = 1
 
 # constant value
 KEY_ARROW = "KEY_ARROW"
@@ -150,72 +148,4 @@ def inactive(x = 1, y = 1, string = '') :
 	setBGColor(INACTIVE[2], INACTIVE[3])
 	print(string, end = '')
 	defaultColor()
-	
-def chess(x = 1, y = 1) :
-	global __chess__x__
-	global __chess__y__
-	if x <= 0 :
-		x = 1
-	if y <= 0 :
-		y = 1
-	__chess__x__ = x
-	__chess__y__ = y
-	y_wall = (0, 2, 4, 6, 8)
-	x_wall = (0, 3, 6, 9, 12, 15, 18, 21, 24)
-	blank = (1, 4, 7, 10, 13, 16, 19, 22)
-	
-	for j in range(9) :
-		if j in y_wall :
-			inactive(__chess__x__, j + __chess__y__, ' '*25)
-			continue
-		for i in range(25) :
-			if i in blank :
-				active(i + __chess__x__ , j + __chess__y__, u'將')
-			elif i in x_wall :
-				inactive(i + __chess__x__, j + __chess__y__, ' ')
-				
-def chessSet(x = 1, y = 1, chessman = u'士') :
-	global __chess__x__
-	global __chess__y__
-	if x <= 0 :
-		x = 1
-	if y <= 0 :
-		y = 1
-	y_pos = (1, 3, 5, 7)
-	x_pos = (1, 4, 7, 10, 13, 16, 19, 22)
-	active(x_pos[x - 1] + __chess__x__ , y_pos[y - 1] + __chess__y__, chessman)
 
-if __name__ == "__main__" :
-	initscr()
-	clsscr()
-	"""
-	setBGColor(Back.YELLOW, Style.NORMAL)
-	box(1, 1, 39, 30)
-	drawText(5, 3, 'A')
-	drawText(7, 3, 'A')
-	drawText(9, 3, 'A')
-	"""
-	
-	chess(10, 5)
-	chessSet(3, 2)
-	
-	while True :
-		pass
-	
-	"""
-	gotoxy(16, 5)
-	input()
-	while (True) :
-		if kbhit() :
-			clsscr()
-			setFGColor(Fore.YELLOW, Style.NORMAL)
-			gotoxy(16, 5)
-			# print(getKey(), end='')
-			value = getKey()
-			if value == '\r' or value == '\n' :
-				print('Enter', end = '')
-			elif value == '\x08' :
-				print('BackSpace', end = '')
-			elif value == KEY_DOWN :
-				print('KEY DOWN', end = '')
-	"""
