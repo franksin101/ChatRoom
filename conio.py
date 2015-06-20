@@ -8,6 +8,8 @@ import struct
 # 請先安裝colorama => pip install -U colorama
 
 __keyBase__ = b''
+__chess__x__ = 1
+__chess__y__ = 1
 
 # constant value
 KEY_ARROW = "KEY_ARROW"
@@ -24,9 +26,16 @@ Enter = '\r'
 BackSpace = '\x08'
 NonASCII = '\xff'
 
+ACTIVE = (Fore.WHITE, Style.NORMAL, Back.YELLOW, Style.BRIGHT) # active 
+INACTIVE = (Fore.BLACK, Style.NORMAL, Back.WHITE, Style.NORMAL)
+
 def putch(c) :
 	if len(c) <= 5 and ord(c) >= 0 and ord(c) <= 255 :
 		msvcrt.putch(struct.pack('!B', ord(c)))
+		
+def putstr(string) :
+	for c in string :
+		putch(c)
 
 def getch() :
 	return msvcrt.getch()
@@ -75,17 +84,21 @@ def getKey() : # python windows function call
 def initscr() :
 	colorama.init()
 			
-def setFGColor(color, style) :
+def setFGColor(color = Fore.WHITE, style = Style.NORMAL) :
 	if color in FORES and style in STYLES:
 		print("%s%s" % (color, style), end='')
 	else :
 		print('Error Foreground color')
 		
-def setBGColor(color, style) :
+def setBGColor(color = Back.BLACK, style = Style.NORMAL) :
 	if color in BACKS and style in STYLES:
 		print("%s%s" % (color, style), end='')
 	else :
 		print('Error Background color')
+		
+def defaultColor() :
+	setFGColor()
+	setBGColor()
 		
 def gotoxy(x, y) :
 	if x <= 0 :
@@ -115,15 +128,80 @@ def box(x, y, width, height) :
 def drawText(x, y, string) :
 	gotoxy(x, y)
 	print(string, end = '')
+	
+def active(x = 1, y = 1, string = '') :
+	if x <= 0 :
+		x = 1
+	if y <= 0 :
+		y = 1
+	gotoxy(x, y)
+	setFGColor(ACTIVE[0], ACTIVE[1])
+	setBGColor(ACTIVE[2], ACTIVE[3])
+	print(string, end = '')
+	defaultColor()
+	
+def inactive(x = 1, y = 1, string = '') :
+	if x <= 0 :
+		x = 1
+	if y <= 0 :
+		y = 1
+	gotoxy(x, y)
+	setFGColor(INACTIVE[0], INACTIVE[1])
+	setBGColor(INACTIVE[2], INACTIVE[3])
+	print(string, end = '')
+	defaultColor()
+	
+def chess(x = 1, y = 1) :
+	global __chess__x__
+	global __chess__y__
+	if x <= 0 :
+		x = 1
+	if y <= 0 :
+		y = 1
+	__chess__x__ = x
+	__chess__y__ = y
+	y_wall = (0, 2, 4, 6, 8)
+	x_wall = (0, 3, 6, 9, 12, 15, 18, 21, 24)
+	blank = (1, 4, 7, 10, 13, 16, 19, 22)
+	
+	for j in range(9) :
+		if j in y_wall :
+			inactive(__chess__x__, j + __chess__y__, ' '*25)
+			continue
+		for i in range(25) :
+			if i in blank :
+				active(i + __chess__x__ , j + __chess__y__, u'將')
+			elif i in x_wall :
+				inactive(i + __chess__x__, j + __chess__y__, ' ')
+				
+def chessSet(x = 1, y = 1, chessman = u'士') :
+	global __chess__x__
+	global __chess__y__
+	if x <= 0 :
+		x = 1
+	if y <= 0 :
+		y = 1
+	y_pos = (1, 3, 5, 7)
+	x_pos = (1, 4, 7, 10, 13, 16, 19, 22)
+	active(x_pos[x - 1] + __chess__x__ , y_pos[y - 1] + __chess__y__, chessman)
 
 if __name__ == "__main__" :
 	initscr()
 	clsscr()
+	"""
 	setBGColor(Back.YELLOW, Style.NORMAL)
 	box(1, 1, 39, 30)
 	drawText(5, 3, 'A')
 	drawText(7, 3, 'A')
 	drawText(9, 3, 'A')
+	"""
+	
+	chess(10, 5)
+	chessSet(3, 2)
+	
+	while True :
+		pass
+	
 	"""
 	gotoxy(16, 5)
 	input()
