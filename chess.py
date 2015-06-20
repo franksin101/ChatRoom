@@ -194,7 +194,7 @@ class Chess :
 			cnt = cnt + 1
 		initStr = '|'.join([str(e) for e in rArray])
 		return initStr
-	def drawChess(self, x = 1, y = 1) :
+	def drawChess(self, x = 1, y = 1) : # 畫棋盤上所有棋子
 		self.chess(x, y)
 		for k in list(self.table.keys()) :
 			pos = self.chessPos(k)
@@ -202,6 +202,11 @@ class Chess :
 				self.chessman(pos[0], pos[1], CHESSMAN[self.table[k][0]][0])
 			else :
 				self.chessman(pos[0], pos[1], u'？')
+	def drawChessman(self, x = 1, y = 1) :
+		pass
+	def act(sx = -1, sy = -1, tx = -1, ty = -1) :
+		pass
+		# > 0, > 0, -1, -1 掀子
 	def move(self, Op) :
 		sel = False
 		newX = self.pos[0]
@@ -232,16 +237,29 @@ class Chess :
 				
 		if sel :
 			if not (self.sel[0]  == -1 and self.sel[1] == -1) : 
+				# 做吃子或移棋
+				if self.table[self.chessPos(self.pos)][0] == 0 : # 移子
+					pass
+				else : # 吃子
+					pass
 				self.chessman(self.sel[0], self.sel[1], CHESSMAN[self.table[self.chessPos(self.sel)][0]][0], self.UNSELECT)
 				self.sel = [-1, -1]
 			else :
 				self.sel[0] = self.pos[0]
 				self.sel[1] = self.pos[1]
+				if self.table[self.chessPos(self.sel)][0] == 0 : # 沒有棋子
+					self.sel = [-1, -1]
+				elif self.table[self.chessPos(self.sel)][1] : # 蓋起來的狀態
+					pass
 				
 		if not (self.pos[0]	== self.sel[0] and self.pos[1] == self.sel[1]) :
 			self.chessman(self.pos[0], self.pos[1], CHESSMAN[self.table[self.chessPos(self.pos)][0]][0], self.SELECT)
 		if not (self.sel[0]  == -1 and self.sel[1] == -1) :
-			self.chessman(self.sel[0], self.sel[1], CHESSMAN[self.table[self.chessPos(self.sel)][0]][0], self.SELECTED)
+			if self.table[self.chessPos(self.sel)][0] == 0 : # 沒有棋子
+				self.chessman(self.sel[0], self.sel[1], CHESSMAN[self.table[self.chessPos(self.sel)][0]][0], self.UNSELECT)
+				self.sel = [-1, -1]
+			else :
+				self.chessman(self.sel[0], self.sel[1], CHESSMAN[self.table[self.chessPos(self.sel)][0]][0], self.SELECTED) # 顯示選擇的棋子
 	
 if __name__ == "__main__" :
 	initscr()
