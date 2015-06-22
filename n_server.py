@@ -10,12 +10,14 @@ import sys
 
 from converter import *
 from conio import *
+from chess import *
 
 class server :
 	def __init__(self, ip = '127.0.0.1', port = 7000, maxQueue = 1000) :
 		self.ip = ip # do automatic detect
 		self.port = port
 		self.user = dict()
+		self.chess = dict()
 		# check, and send messages pool
 		self.Q = Queue(maxQueue)
 		self.cond = Condition()
@@ -71,6 +73,8 @@ class server :
 		username = ""
 		# match game user name
 		peername = ""
+		# chessname
+		chessname = ""
 		# my turn 
 		isMyTurn = True
 		
@@ -118,10 +122,27 @@ class server :
 									print(username + ' peer is ' + peername)
 									self.user[username][2] = True # 雙方都需配成 peer
 									self.user[peername][2] = True # 雙方都需配成 peer
+									__first__right__user = str(random.randint(1, 1000) % 2)
+									__first__right__peer = '?'
+									if __first__right__user == '0' :
+										__first__right__peer = '1'
+									elif __first__right__user == '1' :
+										__first__right__peer = '0'
+									chessname = username + '_' + peername
+									
+									self.chess[chessname] = Chess()
+	
 									self.Q.put((username, "type=peer&user=" + peername))
 									self.Q.put((peername, "type=peer&user=" + username))
-									self.Q.put((username, "type=initStep&first=0"))
-									self.Q.put((peername, "type=initStep&first=1"))
+									
+									self.Q.put((username, "type=initStep&first=" +
+															__first__right__user + 
+															"&chessname=" + chessname + 
+															"&chessInfo=" + self.chess[chessname].chessInfo()))
+									self.Q.put((peername, "type=initStep&first=" + 
+															__first__right__peer + 
+															"&chessname=" + chessname + 
+															"&chessInfo=" + self.chess[chessname].chessInfo()))
 									findPeer = True
 									break
 							if not findPeer :
@@ -130,6 +151,10 @@ class server :
 					# -------------------------------------------------------------------- #
 					elif D["type"] == "peer" :  # 設定 match 對手
 						peername = D["user"]
+					# -------------------------------------------------------------------- #
+					elif D["type"] == "initCheck" :
+						chessname = D["chessname"]
+						pass
 					# -------------------------------------------------------------------- #
 					elif D["type"] == "nextStep" : # 將下一步的棋步傳給對手
 						if isMyTurn : 
@@ -155,6 +180,10 @@ class server :
 							self.user[peername][2] = False
 						except KeyError :
 							pass
+						try :
+							del self.chess[chessname]
+						except KeyError :
+							pass	
 						peername = ""
 						isMyTurn = False
 						print(self.user)
@@ -171,6 +200,10 @@ class server :
 							self.user[peername][2] = False # 將他遊玩的對手設置成未配對
 						except KeyError :
 							pass
+						try :
+							del self.chess[chessname]
+						except KeyError :
+							pass
 						break
 							
 					# self.Q.put( (username, data) )
@@ -184,6 +217,10 @@ class server :
 					del self.user[username]				
 				try :
 					self.user[peername][2] = False # 將他遊玩的對手設置成未配對
+				except KeyError :
+					pass
+				try :
+					del self.chess[chessname]
 				except KeyError :
 					pass
 				print(self.user)

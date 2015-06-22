@@ -12,16 +12,18 @@ import getpass
 
 from converter import *
 from conio import *
+from chess import *
 
 class ChatRoomClient :
 	def __init__(self, ip = "127.0.0.1", port = 7000) :
 		self.ip = ip
 		self.port = port
-		self.cond = Condition()
+		# self.cond = Condition()
 		self.mod = False
 		self.exe = True
-		self.peer = ""
-		self.hint = "Command is -->"
+		# self.peer = ""
+		# self.hint = "Command is -->"
+		self.chess = []
 		self.socket = socket(AF_INET, SOCK_STREAM)
 		self.socket.connect((self.ip, self.port))
 		self.run()
@@ -130,6 +132,9 @@ class ChatRoomClient :
 				# -------------------------------------------------------------------- #
 				elif D['type'] == "initStep" : # 擁有初始棋盤
 					print('initial Chess')
+					self.chess = Chess()
+					self.chess.drawChess(1, 5)
+					self.chess.drawChessInfo(D["chessInfo"])
 					if D["first"] == "1" :
 						self.socket.sendall(str2b("type=first"))
 				# -------------------------------------------------------------------- #
@@ -166,4 +171,6 @@ class ChatRoomClient :
 		rThread.join()
 
 if __name__ == "__main__" :
+	initscr()
+	clsscr()
 	c = ChatRoomClient()

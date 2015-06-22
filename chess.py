@@ -121,6 +121,7 @@ class Chess :
 		self.turn = None
 		self.step = 1
 		self.firstTurn = None
+		self.initChess()
 		
 	def chessColor(self, flag) :
 		if flag == self.SELECT :
@@ -193,9 +194,12 @@ class Chess :
 			return (__x__, __y__)
 			
 	def initChess(self) :
-		self.step = 1
-		self.turn = None
 		self.table = dict()
+		self.pos = [1, 1]
+		self.sel = [-1, -1]
+		self.turn = None
+		self.step = 1
+		self.firstTurn = None
 		for i in range(1, 33) :
 			self.table[i] = [i, False]
 		rArray = [i for i in range(1, 33)]
@@ -229,7 +233,7 @@ class Chess :
 		__chessman_group__  = CHESSMAN[__chessman_id__][2]
 		return (__chessman_id__, __chessman_level__, __chessman_group__, __chess_open__)
 		
-	def chessInfo(self)	 :
+	def chessInfo(self) : # 取得棋盤上的資訊
 		__chess__info__ = []
 		for key in list(self.table.keys()) :
 			if self.table[key][1] :
@@ -239,21 +243,27 @@ class Chess :
 		__chess__info__ = [str(e) for e in __chess__info__]
 		return '|'.join(__chess__info__)
 			
-	def drawChessInfo(self, string) : # 可以刪掉的多餘影印函式
+	def drawChessInfo(self, string) : # 印出棋盤資訊，然後將資訊複製到棋盤的Table
 		__chess__info__ = string.split('|')
 		cnt = 1
 		pos = [1, 1]
 		for e in __chess__info__ :
-			"""if int(e) == 33 :
+			if int(e) == 33 :
 				self.table[cnt] = [int(e), False]
 			else :
-				self.table[cnt] = [int(e), True] """
+				self.table[cnt] = [int(e), True] 
 			pos = self.chessPos(cnt)
 			if pos[0] == self.sel[0] and pos[1] == self.sel[1] :
 				self.chessman(pos[0], pos[1], CHESSMAN[int(e)][0], self.SELECTED)
 			else :
 				self.chessman(pos[0], pos[1], CHESSMAN[int(e)][0])
 			cnt = cnt + 1
+	
+	def getTurn(self) : # 取得目前的回合權
+		return self.turn
+		
+	def getFirstTurn(self) : # 取得第一次的回合權
+		return self.firstTurn
 		
 	def act(self, sx = -1, sy = -1) : # 回傳棋子能夠吃/移動的目標位置
 		target = []
@@ -592,8 +602,8 @@ if __name__ == "__main__" :
 	
 	while True :
 		value = getKey()
-		# ch.move(value)
-		
+		ch.move(value)
+		"""
 		cmd = ch.move2cmd(value)
 		if not cmd  == None :
 			gotoxy(1, 10)
@@ -602,6 +612,6 @@ if __name__ == "__main__" :
 			ch.drawChessInfo(ch.chessInfo())
 			gotoxy(1, 11)
 			print(ch.turn, end = '     ')
-		
+		"""
 		pass
 	
